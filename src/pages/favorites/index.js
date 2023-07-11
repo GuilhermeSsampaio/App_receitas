@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View, SafeAreaView, FlatList } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { getFavorites } from '../../utils/storage';
 import { useIsFocused } from '@react-navigation/native';
+import { FoodList } from '../../components/foodlist';
 
 export function Favorites() {
   const [receipes, setReceipes] = useState([]);
@@ -22,6 +23,10 @@ export function Favorites() {
     if(isActive){
       getReceipes();
     }
+
+    return  () =>{
+      isActive = false;
+    }
   }, [isFocused])
 
   return (
@@ -30,6 +35,16 @@ export function Favorites() {
         {receipes.length === 0 && (
           <Text>Você não tem nenhuma receita salva</Text>
         )}
+
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{marginTop:14}}
+          data={receipes}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({item}) => <FoodList data={item}/>}
+          
+        />
+        
     </SafeAreaView>
   );
 }
